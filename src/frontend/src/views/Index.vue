@@ -1,346 +1,116 @@
 <template>
-  <body>
-    <header class="header">
-      <div class="header__logo">
-        <a href="index.html" class="logo">
-          <img
-            src="../assets/img/logo.svg"
-            alt="V!U!E! Pizza logo"
-            width="90"
-            height="40"
-          />
-        </a>
-      </div>
-      <div class="header__cart">
-        <a href="cart.html">0 ₽</a>
-      </div>
-      <div class="header__user">
-        <a href="#" class="header__login"><span>Войти</span></a>
-      </div>
-    </header>
-
-    <main class="content">
-      <form action="#" method="post">
-        <div class="content__wrapper">
-          <h1 class="title title--big">Конструктор пиццы</h1>
-
-          <div class="content__dough">
-            <div class="sheet">
-              <h2 class="title title--small sheet__title">Выберите тесто</h2>
-
-              <div class="sheet__content dough">
-                <label
-                  v-for="dough in pizza.dough"
-                  :key="dough.id"
-                  :class="[
-                    dough.name === 'Тонкое'
-                      ? 'dough__input--light'
-                      : 'dough__input--large',
-                  ]"
-                  class="dough__input"
-                >
-                  <input
-                    type="radio"
-                    name="dought"
-                    :value="dough.name === 'Тонкое' ? 'light' : 'large'"
-                    class="visually-hidden"
-                    checked
-                  />
-                  <b>{{ dough.name }}</b>
-                  <span>{{ dough.description }}</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div class="content__diameter">
-            <div class="sheet">
-              <h2 class="title title--small sheet__title">Выберите размер</h2>
-
-              <div class="sheet__content diameter">
-                <label
-                  v-for="size in pizza.sizes"
-                  :key="size.id"
-                  :class="{
-                    'diameter__input--small': size.name === '23 см',
-                    'diameter__input--normal': size.name === '32 см',
-                    'diameter__input--big': size.name === '45 см',
-                  }"
-                  class="diameter__input"
-                >
-                  <input
-                    type="radio"
-                    name="diameter"
-                    :value="
-                      size.name === '23 см'
-                        ? 'small'
-                        : size.name === '32 см'
-                        ? 'normal'
-                        : 'big'
-                    "
-                    class="visually-hidden"
-                    checked
-                  />
-                  <span>{{ size.name }}</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div class="content__ingredients">
-            <div class="sheet">
-              <h2 class="title title--small sheet__title">
-                Выберите ингредиенты
-              </h2>
-
-              <div class="sheet__content ingredients">
-                <div class="ingredients__sauce">
-                  <p>Основной соус:</p>
-
-                  <label
-                    v-for="sauce in pizza.sauces"
-                    :key="sauce.id"
-                    class="radio ingredients__input"
-                  >
-                    <input
-                      type="radio"
-                      name="sauce"
-                      :value="sauce.name === 'Томатный' ? 'tomato' : 'creamy'"
-                      checked
-                    />
-                    <span>{{ sauce.name }}</span>
-                  </label>
-                </div>
-
-                <div class="ingredients__filling">
-                  <p>Начинка:</p>
-
-                  <ul class="ingredients__list">
-                    <li
-                      v-for="ingredient in pizza.ingredients"
-                      :key="ingredient.id"
-                      class="ingredients__item"
-                    >
-                      <span
-                        :class="`filling--${pizzaIngredients[ingredient.id]}`"
-                        class="filling"
-                      >
-                        {{ ingredient.name }}
-                      </span>
-
-                      <div class="counter counter--orange ingredients__counter">
-                        <button
-                          type="button"
-                          class="counter__button counter__button--minus"
-                          disabled
-                        >
-                          <span class="visually-hidden">Меньше</span>
-                        </button>
-                        <input
-                          type="text"
-                          name="counter"
-                          class="counter__input"
-                          value="0"
-                        />
-                        <button
-                          type="button"
-                          class="counter__button counter__button--plus"
-                        >
-                          <span class="visually-hidden">Больше</span>
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="content__pizza">
-            <label class="input">
-              <span class="visually-hidden">Название пиццы</span>
-              <input
-                type="text"
-                name="pizza_name"
-                placeholder="Введите название пиццы"
-              />
-            </label>
-
-            <div class="content__constructor">
-              <div class="pizza pizza--foundation--big-tomato">
-                <div class="pizza__wrapper">
-                  <div class="pizza__filling pizza__filling--ananas"></div>
-                  <div class="pizza__filling pizza__filling--bacon"></div>
-                  <div class="pizza__filling pizza__filling--cheddar"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="content__result">
-              <p>Итого: 0 ₽</p>
-              <button type="button" class="button" disabled>Готовьте!</button>
-            </div>
+  <main class="content">
+    <form action="#" method="post">
+      <div class="content__wrapper">
+        <AppTitle title="Конструктор пиццы" big />
+        <div class="content__dough">
+          <div class="sheet">
+            <AppTitle class="sheet__title" title="Выберите тесто" />
+            <BuilderDoughSelector
+              class="sheet__content dough"
+              :dough-list="pizza.dough"
+              :order="order"
+              @updateOrder="$emit('updateOrder', $event)"
+            />
           </div>
         </div>
-      </form>
-    </main>
-  </body>
+
+        <div class="content__diameter">
+          <div class="sheet">
+            <AppTitle class="sheet__title" title="Выберите размер" />
+            <BuilderSizeSelector
+              class="sheet__content diameter"
+              :sizes-list="pizza.sizes"
+              :order="order"
+              @updateOrder="$emit('updateOrder', $event)"
+            />
+          </div>
+        </div>
+        <div class="content__ingredients">
+          <div class="sheet">
+            <AppTitle class="sheet__title" title="Выберите ингредиенты" />
+            <BuilderIngredientsSelector
+              class="sheet__content ingredients"
+              :sauces-list="pizza.sauces"
+              :ingredients-list="pizza.ingredients"
+              :order="order"
+              @updateOrder="$emit('updateOrder', $event)"
+            />
+          </div>
+        </div>
+
+        <div class="content__pizza">
+          <label class="input">
+            <span class="visually-hidden">Название пиццы</span>
+            <input
+              type="text"
+              name="pizza_name"
+              :value="order.namePizza"
+              @input="
+                $emit('updateOrder', {
+                  name: 'name',
+                  namePizza: $event.target.value,
+                })
+              "
+              placeholder="Введите название пиццы"
+            />
+          </label>
+
+          <AppDrop @drop="$emit('updateOrder', $event)">
+            <div class="content__constructor">
+              <BuilderPizzaView :order="order" />
+            </div>
+          </AppDrop>
+
+          <BuilderPriceCounter
+            class="content__result"
+            :priceCounter="order.priceCounter"
+          />
+        </div>
+      </div>
+    </form>
+  </main>
 </template>
 
 <script>
-import pizza from "@/static/pizza.json";
-import pizzaIngredients from "@/common/enums/pizzaIngredients";
+import AppTitle from "@/common/components/AppTitle";
+import AppDrop from "@/common/components/AppDrop";
+import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
+import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
+import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
+import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
+import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
 
 export default {
   name: "IndexHome",
-  data() {
-    return {
-      pizza,
-      pizzaIngredients,
-    };
+  components: {
+    AppTitle,
+    AppDrop,
+    BuilderDoughSelector,
+    BuilderSizeSelector,
+    BuilderIngredientsSelector,
+    BuilderPizzaView,
+    BuilderPriceCounter,
+  },
+  // data() {
+  //   return {
+  //     priceCounter: 0,
+  //   };
+  // },
+  props: {
+    pizza: {
+      type: Object,
+      require: true,
+    },
+    order: {
+      type: Object,
+      require: true,
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.header {
-  position: relative;
-  z-index: 2;
-
-  display: flex;
-
-  padding: 0 2.12%;
-
-  background-color: $green-500;
-  box-shadow: $shadow-light;
-}
-
-.header__logo {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.header__cart {
-  margin-right: 10px;
-  margin-left: auto;
-
-  a {
-    @include b-s16-h19;
-
-    display: block;
-
-    padding-top: 21px;
-    padding-right: 15px;
-    padding-bottom: 21px;
-    padding-left: 58px;
-
-    transition: 0.3s;
-
-    color: $white;
-    background-color: $green-500;
-    background-image: url("../assets/img/cart.svg");
-    background-repeat: no-repeat;
-    background-position: 20px center;
-    background-size: 29px 27px;
-
-    &:hover:not(:active) {
-      background-color: $green-400;
-    }
-
-    &:active {
-      background-color: $green-600;
-    }
-
-    &:focus {
-      opacity: 0.5;
-    }
-  }
-}
-
-.header__user {
-  display: flex;
-  align-items: center;
-
-  a {
-    display: block;
-
-    padding-top: 14px;
-    padding-right: 20px;
-    padding-bottom: 14px;
-    padding-left: 20px;
-
-    transition: 0.3s;
-
-    background-color: $green-500;
-
-    &:hover:not(:active) {
-      background-color: $green-400;
-    }
-
-    &:active {
-      background-color: $green-600;
-    }
-
-    &:focus {
-      opacity: 0.5;
-    }
-  }
-
-  img {
-    display: inline-block;
-
-    width: 32px;
-    height: 32px;
-    margin-right: 8px;
-
-    vertical-align: middle;
-
-    border-radius: 50%;
-  }
-
-  span {
-    @include r-s14-h16;
-
-    display: inline-block;
-
-    vertical-align: middle;
-
-    color: $white;
-  }
-}
-
-.header__logout {
-  &::before {
-    display: inline-block;
-
-    width: 32px;
-    height: 32px;
-    margin-right: 8px;
-
-    content: "";
-    vertical-align: middle;
-
-    background: url("../assets/img/login.svg") no-repeat center;
-    background-size: auto 50%;
-  }
-}
-
-.header__login {
-  &::after {
-    display: inline-block;
-
-    width: 32px;
-    height: 32px;
-    margin-left: 8px;
-
-    content: "";
-    vertical-align: middle;
-
-    background: url("../assets/img/login.svg") no-repeat center;
-    background-size: auto 50%;
-  }
-}
-
 .content {
   padding-top: 20px;
 }

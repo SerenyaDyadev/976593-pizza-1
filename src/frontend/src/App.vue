@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <AppLayout :pizza="pizza" :order="order" @updateOrder="updateOrder" />
+    <AppLayout
+      :pizza="pizza"
+      :order="order"
+      :orderedArray="orderedArray"
+      @updateOrder="updateOrder"
+      @toBasket="toBasket"
+    />
   </div>
 </template>
 
@@ -16,6 +22,7 @@ export default {
   data() {
     return {
       pizza,
+      orderedArray: [],
       order: {
         name: "",
         dough: "",
@@ -27,7 +34,19 @@ export default {
     };
   },
   methods: {
+    toBasket() {
+      this.orderedArray.push(this.order);
+      this.order = {
+        name: "",
+        dough: "",
+        sauce: "",
+        size: "",
+        ingredients: [],
+        priceCounter: 0,
+      };
+    },
     updateOrder(event) {
+      console.log("updateOrder: ", event);
       if (event.count) {
         let ingredients = this.order.ingredients;
         const index = ingredients.findIndex(({ id }) => id === event.id);

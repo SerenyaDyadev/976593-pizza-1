@@ -23,9 +23,14 @@
 export default {
   name: "AppLayoutHeader",
   props: {
-    priceCounter: {
-      type: Number,
-      require: true,
+    orderedArray: {
+      type: Array,
+      require: false,
+    },
+  },
+  computed: {
+    priceCounter() {
+      return this.orderedArray.reduce((acc, num) => acc + num.priceCounter, 0);
     },
   },
 };

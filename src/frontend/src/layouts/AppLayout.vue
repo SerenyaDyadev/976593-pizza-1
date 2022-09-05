@@ -1,10 +1,11 @@
 <template>
   <body>
-    <AppLayoutHeader :priceCounter="order.priceCounter" />
+    <AppLayoutHeader :ordered-array="orderedArray" />
     <Index
       :pizza="pizza"
       :order="order"
       @updateOrder="$emit('updateOrder', $event)"
+      @toBasket="$emit('toBasket')"
     />
   </body>
 </template>
@@ -18,11 +19,6 @@ export default {
     Index,
     AppLayoutHeader,
   },
-  // data() {
-  //   return {
-  //     ingredientsAdded: [],
-  //   };
-  // },
   props: {
     pizza: {
       type: Object,
@@ -32,8 +28,10 @@ export default {
       type: Object,
       require: true,
     },
+    orderedArray: {
+      type: Array,
+      require: false,
+    },
   },
-  computed: {},
-  methods: {},
 };
 </script>

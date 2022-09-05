@@ -1,7 +1,14 @@
 <template>
   <div>
     <p>Итого: {{ priceCounter }} ₽</p>
-    <button type="button" class="button" :disabled="disabled">Готовьте!</button>
+    <button
+      type="button"
+      class="button"
+      :disabled="disabled"
+      @click="$emit('toBasket')"
+    >
+      Готовьте!
+    </button>
   </div>
 </template>
 
@@ -19,7 +26,11 @@ export default {
       return this.priceCounter === 0;
     },
   },
+  // methods: {
+  //   sendOrder() {
+  //     console.log('sendOrder: ');
+  //     this.$emit('sendToPay', this.order);
+  //   }
+  // }
 };
 </script>
-
-<style lang="scss" scoped></style>
